@@ -11,7 +11,10 @@
 暗棋
 
 # 五.程式介紹(含 UML 圖、操作說明):
-##分成六個獨立的原始碼檔案，分別為piece.h、Constants.h、Board.h、piece.cpp、Board.cpp、main.cpp
+
+<img width="2816" height="1536" alt="Gemini_Generated_Image_ocrmy7ocrmy7ocrm" src="https://github.com/user-attachments/assets/08f799ce-474b-4303-a73a-cfc31e44d9c7" /><img width="967" height="539" alt="image" src="https://github.com/user-attachments/assets/11de39e7-6b55-4b23-b744-f91d645cb7ed" />
+
+## 分成六個獨立的原始碼檔案，分別為piece.h、Constants.h、Board.h、piece.cpp、Board.cpp、main.cpp
 
 Constants.h : 基礎定義	定義遊戲通用的常數。包含棋子的顏色（紅、黑、無）與等級（帥到兵）。它是所有檔案的基礎，確保大家對「紅方」或「帥」的定義是一致的。
 
@@ -25,7 +28,15 @@ main.cpp :　負責與玩家互動。
 
 
 # 六.程式如何安裝執行(圖文講解):
-<img width="2816" height="1536" alt="Gemini_Generated_Image_ocrmy7ocrmy7ocrm" src="https://github.com/user-attachments/assets/08f799ce-474b-4303-a73a-cfc31e44d9c7" />
+<img width="950" height="532" alt="image" src="https://github.com/user-attachments/assets/0e0d4c3d-2036-4f3b-bf63-92d405983773" />
+輸入f (意旨flip)
+輸入行列翻開棋子
+![Uploading image.png…]()
+輸入m (意旨move)
+輸入原本位置的行列
+輸入目標位置的行列
+
+
 
 # 七.程式畫面截圖:
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/23273ac9-b993-4a2e-9ea5-a662701b7c32" />
