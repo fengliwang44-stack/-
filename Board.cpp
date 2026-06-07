@@ -76,19 +76,22 @@ Color Board::checkWinner() {
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 8; j++) {
             Piece* p = grid[i][j];
-            // 只統計「已翻開」且「不是空位」的棋子
-            if (p && p->isFlipped() && p->getRank() != EMPTY && p->getColor() != NONE) {
+            
+            // 只要不是空位 (不是 nullptr 且 Rank 不是 EMPTY)
+            if (p != nullptr && p->getRank() != EMPTY) {
                 if (p->getColor() == RED) hasRed = true;
                 if (p->getColor() == BLACK) hasBlack = true;
             }
         }
     }
 
-    if (!hasRed) return BLACK; // 紅方沒棋了，黑方獲勝
-    if (!hasBlack) return RED; // 黑方沒棋了，紅方獲勝
-    return NONE;               // 遊戲繼續
+    // 只有在遊戲進行一段時間後，若某一方真的完全沒有棋子了才判斷勝利
+    // (開局時 hasRed 和 hasBlack 應該都是 true)
+    if (hasRed && !hasBlack) return RED;
+    if (!hasRed && hasBlack) return BLACK;
+    
+    return NONE; // 遊戲繼續
 }
-
 //取得棋子的指標
 Piece* Board::getPiece(int r, int c) {
     if (r < 0 || r >= 4 || c < 0 || c >= 8) return nullptr;
