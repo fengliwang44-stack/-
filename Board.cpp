@@ -1,4 +1,4 @@
-﻿#include "Board.h"
+#include "Board.h"
 #include <vector>
 #include <algorithm>
 #include <random>
@@ -116,42 +116,48 @@ bool Board::isCannonPathClear(int r1, int c1, int r2, int c2) {
 //棋子移動跟吃棋子判定 use pointer
 bool Board::move(int r1, int c1, int r2, int c2, Color turn) {
     // 1. 檢查是否在棋盤中
-    if (r1 < 0 || r1 > 3 || c1 < 0 || c1 > 7 || r2 < 0 || r2 > 3 || c2 < 0 || c2 > 7) 
+    if (r1 < 0 || r1 > 3 || c1 < 0 || c1 > 7 || r2 < 0 || r2 > 3 || c2 < 0 || c2 > 7)
         return false;
+
     Piece* src = grid[r1][c1];
     Piece* dst = grid[r2][c2];
-    if (!src || !src->isFlipped() || src->getColor() != turn) 
+
+    // 檢查來源是否合法
+    if (!src || !src->isFlipped() || src->getColor() != turn)
         return false;
 
     // 2. 定義兩種合法的移動模式
     bool isAdjacent = (abs(r1 - r2) + abs(c1 - c2) == 1);
-    bool isCannonJump = (src->getRank() == CANNON &&
-        dst->isFlipped() &&
-        dst->getColor() != NONE &&
-        dst->getColor() != turn &&
-        isCannonPathClear(r1, c1, r2, c2));
+    bool isCannonJump = (src->getRank() == CANNON && isCannonPathClear(r1, c1, r2, c2));
 
-    // 3. 如果不是炮，也不相鄰，則不能移動
-    if (!isAdjacent && !isCannonJump)
-        return false;
+    // 3. 強制規則：若是炮，必須跳躍；若不是炮，必須相鄰
+    if (src->getRank() == CANNON) {
+        if (!isCannonJump) return false;
+    }
+    else {
+        if (!isAdjacent) return false;
+    }
 
-    // 4. 吃子規則判斷 (若為炮飛吃，直接跳過比大小)
+    // 4. 吃子規則判斷
     if (dst->isFlipped() && dst->getColor() != NONE) {
-        if (dst->getColor() == turn)
-            return false; // 吃自己人
+        if (dst->getColor() == turn) return false; // 不能吃自己人
 
-        // 若不是炮飛吃，才進行大小比較
-        if (!isCannonJump) {
-            if (src->getRank() == SOLDIER && dst->getRank() == GENERAL) { 
-            //兵吃將 就不會進else if
+        // 若不是炮 (炮的吃子合法性已由 isCannonJump 判斷)，進行大小比較
+        if (src->getRank() != CANNON) {
+            // 兵吃將特殊規則
+            if (src->getRank() == SOLDIER && dst->getRank() == GENERAL) {
+                // 允許吃，不做任何處理
             }
-            else if (src->getRank() < dst->getRank() && src->getRank() != CANNON) return false;
+            // 一般大小比較：若源棋子小於目標，則不能吃
+            else if (src->getRank() < dst->getRank()) {
+                return false;
+            }
         }
     }
 
     // 5. 執行移動
     grid[r2][c2] = src;
-    grid[r1][c1] = new Piece(NONE, EMPTY);
-    grid[r1][c1] ->flip();
+    grid[r1][c1] = new Piece(NONE, EMPTY); // 原位置變成空棋子
+    grid[r1][c1]->flip();                 // 保持原本翻開狀態或調整
     return true;
 }
